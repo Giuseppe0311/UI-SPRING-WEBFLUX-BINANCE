@@ -276,7 +276,7 @@
 
         connectWebSocket() {
             try {
-                this.websocket = new WebSocket('ws://localhost:8080/binance');
+                this.websocket = new WebSocket('wss://spring-webflux-binance.onrender.com/binance');
 
                 this.websocket.onopen = () => {
                     console.log('WebSocket conectado');
