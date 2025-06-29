@@ -3,11 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Trading - Criptomonedas</title>
+    <title>Binance Pro Trading Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         tailwind.config = {
             theme: {
+                fontFamily: {
+                    'sans': ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                    'mono': ['Roboto Mono', 'ui-monospace', 'monospace']
+                },
                 extend: {
                     animation: {
                         'slide-down': 'slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -15,23 +23,41 @@
                         'float': 'float 3s ease-in-out infinite',
                         'shimmer': 'shimmer 2s linear infinite',
                         'bounce-gentle': 'bounceGentle 0.6s ease-out',
-                        'scale-in': 'scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1)'
+                        'scale-in': 'scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+                        'fade-in': 'fadeIn 0.5s ease-out'
                     },
                     backgroundImage: {
                         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
                         'cyber-grid': 'linear-gradient(rgba(0,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,255,0.1) 1px, transparent 1px)'
                     },
                     boxShadow: {
-                        'neon-green': '0 0 20px rgba(34, 197, 94, 0.4), 0 0 40px rgba(34, 197, 94, 0.2)',
-                        'neon-red': '0 0 20px rgba(239, 68, 68, 0.4), 0 0 40px rgba(239, 68, 68, 0.2)',
-                        'neon-blue': '0 0 30px rgba(59, 130, 246, 0.5)',
-                        'inner-glow': 'inset 0 0 20px rgba(255, 255, 255, 0.1)'
+                        'neon-green': '0 0 20px rgba(34, 197, 94, 0.3), 0 0 40px rgba(34, 197, 94, 0.15)',
+                        'neon-red': '0 0 20px rgba(239, 68, 68, 0.3), 0 0 40px rgba(239, 68, 68, 0.15)',
+                        'neon-blue': '0 0 30px rgba(59, 130, 246, 0.3)',
+                        'inner-glow': 'inset 0 0 20px rgba(255, 255, 255, 0.1)',
+                        'card': '0 4px 20px rgba(0, 0, 0, 0.25)'
+                    },
+                    colors: {
+                        'dark': {
+                            '50': '#f6f7f9',
+                            '100': '#eceef2',
+                            '200': '#d4d9e3',
+                            '300': '#afb9ca',
+                            '400': '#8494ac',
+                            '500': '#64748b',
+                            '600': '#4d5a6e',
+                            '700': '#3e4859',
+                            '800': '#2d3543',
+                            '900': '#1a202c',
+                            '950': '#0f1218'
+                        }
                     }
                 }
             }
         }
     </script>
     <style>
+        /* Animation Keyframes */
         @keyframes slideDown {
             from {
                 transform: translateY(-100px) scale(0.8);
@@ -43,8 +69,8 @@
             }
         }
         @keyframes glowPulse {
-            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
-            50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.8), 0 0 60px rgba(59, 130, 246, 0.4); }
+            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.6), 0 0 60px rgba(59, 130, 246, 0.3); }
         }
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
@@ -62,185 +88,241 @@
             from { transform: scale(0.9); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
-        .shimmer-effect {
-            background: linear-gradient(
-                    90deg,
-                    transparent 0%,
-                    rgba(255, 255, 255, 0.2) 50%,
-                    transparent 100%
-            );
-            background-size: 200% 100%;
-            animation: shimmer 2s linear infinite;
-        }
-        .cyber-border {
-            position: relative;
-            background: linear-gradient(45deg, rgba(0,255,255,0.1), rgba(255,0,255,0.1));
-        }
-        .cyber-border::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            padding: 2px;
-            background: linear-gradient(45deg, #00ffff, #ff00ff);
-            border-radius: inherit;
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask-composite: xor;
-        }
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        body {
-            background: linear-gradient(135deg, #0c0a1a 0%, #1a0b2e 50%, #16213e 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* Visual Effects */
+        .shimmer-effect {
+            background: linear-gradient(
+                    90deg,
+                    transparent 0%,
+                    rgba(255, 255, 255, 0.15) 50%,
+                    transparent 100%
+            );
+            background-size: 200% 100%;
+            animation: shimmer 2.5s linear infinite;
+        }
+        /* Base Styles */
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            font-family: 'Inter', sans-serif;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        /* Component Styles */
         .order-card {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .order-card:hover {
-            transform: translateY(-5px) scale(1.02);
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(59, 130, 246, 0.5);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(59, 130, 246, 0.7);
         }
     </style>
 </head>
-<body class="min-h-screen p-4 overflow-x-hidden">
+<body class="min-h-screen p-6 overflow-x-hidden">
 <!-- Animated Background Grid -->
-<div class="fixed inset-0 opacity-20 pointer-events-none" style="background-image: linear-gradient(rgba(0,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,255,0.1) 1px, transparent 1px); background-size: 50px 50px;"></div>
+<div class="fixed inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(rgba(59,130,246,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.05) 1px, transparent 1px); background-size: 40px 40px;"></div>
 
-<div class="max-w-7xl mx-auto relative z-10">
-    <!-- Enhanced Header -->
-    <div class="glass-effect rounded-2xl p-8 mb-8 cyber-border animate-glow-pulse">
-        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div class="text-center md:text-left">
-                <h1 class="text-5xl font-black text-transparent bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text animate-float mb-2">
-                    🚀 CRYPTO TRADING LIVE
-                </h1>
-                <p class="text-gray-300 text-lg font-medium">Trading en tiempo real - Datos de Binance</p>
+<div class="max-w-7xl mx-auto relative z-10 animate-fade-in">
+    <!-- Professional Header with Logo -->
+    <header class="premium-card rounded-2xl p-6 mb-8 shadow-neon-blue">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-4">
+                <!-- Logo -->
+                <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                </div>
+
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-black text-transparent bg-gradient-to-r from-blue-400 via-cyan-400 to-indigo-400 bg-clip-text">
+                        BINANCE PRO TRADING
+                    </h1>
+                    <p class="text-slate-400 text-sm md:text-base font-medium">Monitoreo profesional de operaciones en tiempo real</p>
+                </div>
             </div>
-            <div class="flex items-center gap-6">
-                <div class="text-center">
-                    <label class="text-gray-300 font-bold text-sm uppercase tracking-wider mb-2 block">Criptomoneda</label>
-                    <select id="cryptoSelect" class="bg-gradient-to-r from-gray-800 to-gray-700 text-white px-6 py-3 rounded-xl border-2 border-gray-600 focus:border-cyan-400 focus:ring-4 focus:ring-cyan-400/30 focus:outline-none transition-all duration-300 font-bold text-lg shadow-neon-blue">
-                        <option value="BTCUSDT">🟡 Bitcoin (BTC)</option>
-                        <option value="XRPUSDT">🔵 XRP (XRP)</option>
+
+            <div class="flex items-center gap-6 flex-wrap justify-center">
+
+                <!-- Asset Selector -->
+                <div>
+                    <label class="text-slate-400 font-medium text-xs uppercase tracking-wider mb-1.5 block">Seleccionar Activo</label>
+                    <select id="cryptoSelect" class="bg-dark-800 text-white px-4 py-2.5 rounded-lg border border-slate-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-300 font-medium text-sm w-full md:w-auto">
+                        <option value="BTCUSDT">₿ Bitcoin (BTC/USDT)</option>
                     </select>
+                </div>
+
+                <!-- Connection Status Indicator -->
+                <div class="bg-dark-800/80 rounded-lg px-3 py-2 flex items-center gap-2 border border-slate-700/50">
+                    <span id="systemStatus" class="flex items-center gap-2 text-red-400 font-semibold text-sm">
+                        <span class="w-2.5 h-2.5 bg-red-400 rounded-full animate-pulse"></span>
+                        OFFLINE
+                    </span>
                 </div>
             </div>
         </div>
-    </div>
+    </header>
 
-    <!-- Trading Statistics -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="glass-effect rounded-xl p-6 text-center transform hover:scale-105 transition-all duration-300">
-            <div class="text-green-400 text-3xl mb-2">📈</div>
-            <div class="text-green-400 text-2xl font-bold" id="buyCount">0</div>
-            <div class="text-gray-400 text-sm font-medium">COMPRAS</div>
-        </div>
-        <div class="glass-effect rounded-xl p-6 text-center transform hover:scale-105 transition-all duration-300">
-            <div class="text-red-400 text-3xl mb-2">📉</div>
-            <div class="text-red-400 text-2xl font-bold" id="sellCount">0</div>
-            <div class="text-gray-400 text-sm font-medium">VENTAS</div>
-        </div>
-        <div class="glass-effect rounded-xl p-6 text-center transform hover:scale-105 transition-all duration-300">
-            <div class="text-blue-400 text-3xl mb-2">⚡</div>
-            <div class="text-blue-400 text-2xl font-bold" id="totalOrders">0</div>
-            <div class="text-gray-400 text-sm font-medium">TOTAL</div>
-        </div>
-        <div class="glass-effect rounded-xl p-6 text-center transform hover:scale-105 transition-all duration-300">
-            <div id="connectionStatusIcon" class="text-3xl mb-2">🔴</div>
-            <div id="connectionStatus" class="text-red-400 text-lg font-bold">DESCONECTADO</div>
-            <div class="text-gray-400 text-sm font-medium">ESTADO</div>
-        </div>
-    </div>
 
-    <!-- Enhanced Trading Boxes -->
-    <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
-        <!-- Buy Orders Box -->
-        <div class="glass-effect rounded-2xl overflow-hidden shadow-neon-green">
-            <div class="bg-gradient-to-r from-green-600 via-green-500 to-emerald-500 px-8 py-6 relative overflow-hidden">
+    <!-- Trading Section -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
+        <!-- Chart Section -->
+        <div class="premium-card rounded-2xl overflow-hidden shadow-card xl:col-span-1">
+            <div class="bg-gradient-to-r from-indigo-600 to-blue-600 px-6 py-4 relative overflow-hidden">
                 <div class="shimmer-effect absolute inset-0"></div>
                 <div class="relative z-10">
                     <div class="flex items-center justify-between">
-                        <h2 class="text-2xl font-black text-white flex items-center gap-3">
-                            <span class="w-4 h-4 bg-green-300 rounded-full animate-ping"></span>
-                            <span class="text-3xl">💚</span>
-                            ÓRDENES DE COMPRA
+                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                            </svg>
+                            Market Overview
                         </h2>
-                        <div class="bg-green-400 text-green-900 px-4 py-2 rounded-full text-lg font-black animate-bounce-gentle">
-                            <span id="buyCountHeader">0</span>
+                        <div class="flex gap-2">
+                            <button class="bg-white/10 hover:bg-white/20 text-white text-xs font-medium py-1 px-2 rounded transition-all">1H</button>
+                            <button class="bg-white/20 text-white text-xs font-medium py-1 px-2 rounded transition-all">1D</button>
+                            <button class="bg-white/10 hover:bg-white/20 text-white text-xs font-medium py-1 px-2 rounded transition-all">1W</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="h-[600px] overflow-y-auto bg-gradient-to-b from-green-900/10 to-transparent" id="buyContainer">
-                <div class="p-8 text-center text-gray-400">
-                    <div class="text-6xl mb-4 animate-float">📈</div>
-                    <p class="text-xl font-medium">Esperando órdenes de compra...</p>
+            <div class="p-4 h-[400px] flex items-center justify-center">
+                <canvas id="priceChart" class="w-full h-full"></canvas>
+            </div>
+        </div>
+
+        <!-- Buy Orders Box -->
+        <div class="premium-card rounded-2xl overflow-hidden shadow-card">
+            <div class="bg-gradient-to-r from-emerald-600 to-green-600 px-6 py-4 relative overflow-hidden">
+                <div class="shimmer-effect absolute inset-0"></div>
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <polyline points="19 12 12 19 5 12"></polyline>
+                            </svg>
+                            Buy Orders
+                        </h2>
+                        <span class="bg-white/20 text-white text-xs font-medium py-1 px-2 rounded-full">
+                            Live
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="h-[400px] overflow-y-auto" id="buyContainer">
+                <div class="p-8 text-center text-slate-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-slate-300 animate-float" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 20V10"></path>
+                        <path d="M18 14l-6-6-6 6"></path>
+                        <rect x="4" y="4" width="16" height="6" rx="2"></rect>
+                    </svg>
+                    <p class="text-lg font-medium">Waiting for buy orders...</p>
                     <div class="mt-4 flex justify-center">
-                        <div class="w-8 h-8 border-4 border-green-400 border-t-transparent rounded-full animate-spin"></div>
+                        <div class="w-6 h-6 border-3 border-green-400 border-t-transparent rounded-full animate-spin"></div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Sell Orders Box -->
-        <div class="glass-effect rounded-2xl overflow-hidden shadow-neon-red">
-            <div class="bg-gradient-to-r from-red-600 via-red-500 to-rose-500 px-8 py-6 relative overflow-hidden">
+        <div class="premium-card rounded-2xl overflow-hidden shadow-card">
+            <div class="bg-gradient-to-r from-rose-600 to-red-600 px-6 py-4 relative overflow-hidden">
                 <div class="shimmer-effect absolute inset-0"></div>
                 <div class="relative z-10">
                     <div class="flex items-center justify-between">
-                        <h2 class="text-2xl font-black text-white flex items-center gap-3">
-                            <span class="w-4 h-4 bg-red-300 rounded-full animate-ping"></span>
-                            <span class="text-3xl">❤️</span>
-                            ÓRDENES DE VENTA
+                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="19" x2="12" y2="5"></line>
+                                <polyline points="5 12 12 5 19 12"></polyline>
+                            </svg>
+                            Sell Orders
                         </h2>
-                        <div class="bg-red-400 text-red-900 px-4 py-2 rounded-full text-lg font-black animate-bounce-gentle">
-                            <span id="sellCountHeader">0</span>
-                        </div>
+                        <span class="bg-white/20 text-white text-xs font-medium py-1 px-2 rounded-full">
+                            Live
+                        </span>
                     </div>
                 </div>
             </div>
-            <div class="h-[600px] overflow-y-auto bg-gradient-to-b from-red-900/10 to-transparent" id="sellContainer">
-                <div class="p-8 text-center text-gray-400">
-                    <div class="text-6xl mb-4 animate-float">📉</div>
-                    <p class="text-xl font-medium">Esperando órdenes de venta...</p>
+            <div class="h-[400px] overflow-y-auto" id="sellContainer">
+                <div class="p-8 text-center text-slate-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-slate-300 animate-float" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 4v10"></path>
+                        <path d="M6 10l6 6 6-6"></path>
+                        <rect x="4" y="14" width="16" height="6" rx="2"></rect>
+                    </svg>
+                    <p class="text-lg font-medium">Waiting for sell orders...</p>
                     <div class="mt-4 flex justify-center">
-                        <div class="w-8 h-8 border-4 border-red-400 border-t-transparent rounded-full animate-spin"></div>
+                        <div class="w-6 h-6 border-3 border-red-400 border-t-transparent rounded-full animate-spin"></div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Enhanced Status Bar -->
-    <div class="mt-8 glass-effect rounded-2xl p-6 cyber-border">
-        <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-lg">
-            <div class="flex items-center gap-6">
-                <span class="text-gray-300 font-bold">🌐 ESTADO DEL SISTEMA:</span>
-                <span id="systemStatus" class="flex items-center gap-3 text-red-400 font-black">
-                        <span class="w-3 h-3 bg-red-400 rounded-full animate-pulse"></span>
-                        DESCONECTADO
-                    </span>
-            </div>
-            <div class="flex items-center gap-4 text-gray-300">
-                <span class="font-bold">⏰ ÚLTIMA ACTUALIZACIÓN:</span>
-                <span id="lastUpdate" class="text-white font-mono text-xl bg-gray-800 px-3 py-1 rounded-lg">--:--:--</span>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    // Mapeo de símbolos de criptomonedas
+    // Cryptocurrency symbols mapping
     const cryptoSymbols = {
         BTCUSDT: 'BTC',
-        XRPUSDT: 'XRP'
+        XRPUSDT: 'XRP',
+        ETHUSDT: 'ETH',
+        SOLUSDT: 'SOL'
+    };
+
+    // Sample price data for chart
+    const priceData = {
+        labels: Array.from({length: 24}, (_, i) => `${i}:00`),
+        datasets: [{
+            label: 'Price (USDT)',
+            data: [
+                43250, 43400, 43380, 43500, 43600, 43550, 43700, 43900, 
+                44100, 44050, 43800, 43600, 43500, 43450, 43300, 43200, 
+                43350, 43400, 43500, 43600, 43700, 43650, 43550, 43521
+            ],
+            borderColor: 'rgba(59, 130, 246, 1)',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            borderWidth: 2,
+            pointRadius: 0,
+            pointHoverRadius: 4,
+            pointHoverBackgroundColor: 'rgba(59, 130, 246, 1)',
+            tension: 0.4,
+            fill: true
+        }]
     };
 
     class TradingDashboard {
@@ -251,13 +333,82 @@
             this.maxOrders = 20;
             this.websocket = null;
             this.reconnectInterval = null;
-            this.totalOrdersCount = 0;
+            this.chart = null;
+            this.seenTrades = new Set();          // nuevo
             this.init();
         }
 
         init() {
+            this.initChart();
             this.bindEvents();
             this.connectWebSocket();
+            this.initThemeToggle();
+        }
+
+        initChart() {
+            const ctx = document.getElementById('priceChart').getContext('2d');
+
+            // Chart.js configuration
+            this.chart = new Chart(ctx, {
+                type: 'line',
+                data: priceData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            titleColor: 'rgba(255, 255, 255, 0.9)',
+                            bodyColor: 'rgba(255, 255, 255, 0.9)',
+                            borderColor: 'rgba(59, 130, 246, 0.5)',
+                            borderWidth: 1,
+                            padding: 10,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return `$${context.raw.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: 'rgba(148, 163, 184, 0.7)',
+                                font: {
+                                    size: 10
+                                },
+                                maxRotation: 0,
+                                maxTicksLimit: 6
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(148, 163, 184, 0.1)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: 'rgba(148, 163, 184, 0.7)',
+                                font: {
+                                    size: 10
+                                },
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString('en-US');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         bindEvents() {
@@ -265,7 +416,21 @@
                 this.currentSymbol = e.target.value;
                 this.clearOrders();
                 this.subscribeToSymbol();
+                this.updateChartData();
             });
+        }
+
+        updateChartData() {
+            // In a real implementation, this would fetch new data for the selected symbol
+            // For now, we'll just simulate a data update
+            const newData = [...this.chart.data.datasets[0].data];
+            const variation = Math.random() * 500 - 250;
+
+            this.chart.data.datasets[0].data = newData.map(price => 
+                Math.max(100, price + variation * (Math.random() - 0.5))
+            );
+
+            this.chart.update();
         }
 
         clearOrders() {
@@ -276,10 +441,9 @@
 
         connectWebSocket() {
             try {
-                this.websocket = new WebSocket('wss://spring-webflux-binance.onrender.com/binance');
+                this.websocket = new WebSocket('wss://project1.giusdev.cv/binance');
 
                 this.websocket.onopen = () => {
-                    console.log('WebSocket conectado');
                     this.updateConnectionStatus(true);
                     this.subscribeToSymbol();
                     if (this.reconnectInterval) {
@@ -291,28 +455,25 @@
                 this.websocket.onmessage = (event) => {
                     try {
                         const data = JSON.parse(event.data);
-                        console.log('Mensaje recibido:', data);
                         if (data.symbol && data.side) {
                             this.addOrder(data);
+                            this.updateActivityTable(data);
                         }
                     } catch (error) {
-                        console.error('Error al parsear mensaje:', error);
+                        console.error('Error parsing message:', error);
                     }
                 };
 
                 this.websocket.onclose = () => {
-                    console.log('WebSocket desconectado');
                     this.updateConnectionStatus(false);
                     this.startReconnect();
                 };
 
                 this.websocket.onerror = (error) => {
-                    console.error('Error en WebSocket:', error);
                     this.updateConnectionStatus(false);
                 };
 
             } catch (error) {
-                console.error('Error al conectar WebSocket:', error);
                 this.updateConnectionStatus(false);
                 this.startReconnect();
             }
@@ -321,7 +482,6 @@
         startReconnect() {
             if (!this.reconnectInterval) {
                 this.reconnectInterval = setInterval(() => {
-                    console.log('Intentando reconectar...');
                     this.connectWebSocket();
                 }, 5000);
             }
@@ -337,68 +497,61 @@
                     id: randomId
                 };
 
-                console.log('Enviando suscripción:', message);
                 this.websocket.send(JSON.stringify(message));
-                console.log('Suscrito a:', symbolParam, 'con ID:', randomId);
             } else {
-                console.log('WebSocket no está conectado, no se puede suscribir');
+                console.log('WebSocket is not connected, cannot subscribe');
             }
         }
 
         updateConnectionStatus(connected) {
             const statusElement = document.getElementById('systemStatus');
-            const iconElement = document.getElementById('connectionStatusIcon');
-            const statusCard = document.getElementById('connectionStatus');
 
             if (connected) {
                 statusElement.innerHTML = `
-                        <span class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></span>
-                        CONECTADO
-                    `;
-                statusElement.className = 'flex items-center gap-3 text-green-400 font-black';
-                iconElement.textContent = '🟢';
-                statusCard.textContent = 'CONECTADO';
-                statusCard.className = 'text-green-400 text-lg font-bold';
+                    <span class="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse"></span>
+                    ONLINE
+                `;
+                statusElement.className = 'flex items-center gap-2 text-green-400 font-semibold text-sm';
             } else {
                 statusElement.innerHTML = `
-                        <span class="w-3 h-3 bg-red-400 rounded-full animate-pulse"></span>
-                        DESCONECTADO
-                    `;
-                statusElement.className = 'flex items-center gap-3 text-red-400 font-black';
-                iconElement.textContent = '🔴';
-                statusCard.textContent = 'DESCONECTADO';
-                statusCard.className = 'text-red-400 text-lg font-bold';
+                    <span class="w-2.5 h-2.5 bg-red-400 rounded-full animate-pulse"></span>
+                    OFFLINE
+                `;
+                statusElement.className = 'flex items-center gap-2 text-red-400 font-semibold text-sm';
             }
         }
 
+        updateActivityTable(order) {
+            // This would update the activity table with real data
+            // For now, we'll just log it
+        }
+
         addOrder(order) {
-            setTimeout(() => {
-                if (order.side === 'SELL') {
-                    this.sellOrders.unshift(order);
-                    if (this.sellOrders.length > this.maxOrders) {
-                        this.sellOrders.pop();
-                    }
-                } else if (order.side === 'BUY') {
-                    this.buyOrders.unshift(order);
-                    if (this.buyOrders.length > this.maxOrders) {
-                        this.buyOrders.pop();
-                    }
+            const uniqueId = `${order.symbol}-${order.tradeId}-${order.tradeTime}`;
+            if (this.seenTrades.has(uniqueId)) return;
+            this.seenTrades.add(uniqueId);
+
+            if (order.side === 'SELL') {
+                this.sellOrders.unshift(order);
+                if (this.sellOrders.length > this.maxOrders) {
+                    const removed = this.sellOrders.pop();
+                    const removedId = `${removed.symbol}-${removed.tradeId}-${removed.tradeTime}`;
+                    this.seenTrades.delete(removedId);
                 }
-                this.totalOrdersCount++;
-                this.renderOrders();
-                this.updateLastUpdate();
-            }, 1000);
+            } else if (order.side === 'BUY') {
+                this.buyOrders.unshift(order);
+                if (this.buyOrders.length > this.maxOrders) {
+                    const removed = this.buyOrders.pop();
+                    const removedId = `${removed.symbol}-${removed.tradeId}-${removed.tradeTime}`;a
+                    this.seenTrades.delete(removedId);
+                }
+            }
+            this.renderOrders();
         }
 
         renderOrders() {
             this.renderOrderList('sellContainer', this.sellOrders, 'sell');
             this.renderOrderList('buyContainer', this.buyOrders, 'buy');
-
-            document.getElementById('sellCount').textContent = this.sellOrders.length;
-            document.getElementById('sellCountHeader').textContent = this.sellOrders.length;
-            document.getElementById('buyCount').textContent = this.buyOrders.length;
-            document.getElementById('buyCountHeader').textContent = this.buyOrders.length;
-            document.getElementById('totalOrders').textContent = this.totalOrdersCount;
         }
 
         renderOrderList(containerId, orders, type) {
@@ -406,8 +559,28 @@
 
             if (orders.length === 0) {
                 const emptyState = type === 'sell' ?
-                    '<div class="p-8 text-center text-gray-400"><div class="text-6xl mb-4 animate-float">📉</div><p class="text-xl font-medium">Esperando órdenes de venta...</p><div class="mt-4 flex justify-center"><div class="w-8 h-8 border-4 border-red-400 border-t-transparent rounded-full animate-spin"></div></div></div>' :
-                    '<div class="p-8 text-center text-gray-400"><div class="text-6xl mb-4 animate-float">📈</div><p class="text-xl font-medium">Esperando órdenes de compra...</p><div class="mt-4 flex justify-center"><div class="w-8 h-8 border-4 border-green-400 border-t-transparent rounded-full animate-spin"></div></div></div>';
+                    `<div class="p-8 text-center text-slate-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-slate-300 animate-float" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 4v10"></path>
+                            <path d="M6 10l6 6 6-6"></path>
+                            <rect x="4" y="14" width="16" height="6" rx="2"></rect>
+                        </svg>
+                        <p class="text-lg font-medium">Waiting for sell orders...</p>
+                        <div class="mt-4 flex justify-center">
+                            <div class="w-6 h-6 border-3 border-red-400 border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+                    </div>` :
+                    `<div class="p-8 text-center text-slate-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-slate-300 animate-float" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 20V10"></path>
+                            <path d="M18 14l-6-6-6 6"></path>
+                            <rect x="4" y="4" width="16" height="6" rx="2"></rect>
+                        </svg>
+                        <p class="text-lg font-medium">Waiting for buy orders...</p>
+                        <div class="mt-4 flex justify-center">
+                            <div class="w-6 h-6 border-3 border-green-400 border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+                    </div>`;
                 container.innerHTML = emptyState;
                 return;
             }
@@ -435,52 +608,59 @@
             const isSell = type === 'sell';
 
             return `
-                    <div class="order-card mx-4 mb-4 p-6 glass-effect rounded-2xl ${isSell ? 'border-l-4 border-red-400 shadow-neon-red' : 'border-l-4 border-green-400 shadow-neon-green'} ${isNew ? 'animate-slide-down' : ''}" style="animation-delay: ${index * 100}ms">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-3 h-3 ${isSell ? 'bg-red-400' : 'bg-green-400'} rounded-full animate-pulse"></div>
-                                <span class="text-2xl font-black text-white">${cryptoSymbol}</span>
-                                <span class="text-sm ${isSell ? 'text-red-300 bg-red-900/50' : 'text-green-300 bg-green-900/50'} font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                                    ${order.side}
-                                </span>
+                <div class="order-card mx-3 mb-3 p-4 premium-card rounded-xl ${isNew ? 'animate-scale-in' : ''}" style="animation-delay: ${index * 100}ms">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 flex items-center justify-center ${isSell ? 'bg-red-500/20' : 'bg-green-500/20'} rounded-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ${isSell ? 'text-red-400' : 'text-green-400'}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    ${isSell ? 
+                                        '<line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline>' : 
+                                        '<line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline>'}
+                                </svg>
                             </div>
-                            <div class="text-right">
-                                <div class="text-xs text-gray-400 font-mono">ID: ${order.tradeId}</div>
-                                <div class="text-sm text-gray-300 font-bold">${time}</div>
+                            <div>
+                                <span class="text-lg font-bold text-white">${cryptoSymbol}</span>
+                                <div class="flex items-center gap-1.5 mt-0.5">
+                                    <div class="w-1.5 h-1.5 ${isSell ? 'bg-red-400' : 'bg-green-400'} rounded-full animate-pulse"></div>
+                                    <span class="text-xs ${isSell ? 'text-red-400' : 'text-green-400'} font-medium">
+                                        ${order.side}
+                                    </span>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-                            <div class="bg-gradient-to-br from-blue-900/30 to-blue-800/20 rounded-xl p-4 border border-blue-500/30 shadow-inner-glow">
-                                <div class="flex items-center gap-2 mb-2">
-                                    <span class="text-2xl">💵</span>
-                                    <span class="text-blue-300 text-sm font-bold uppercase tracking-wider">USD</span>
-                                </div>
-                                <div class="text-white font-black text-2xl mb-1">$${order.usd.total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
-                                <div class="text-blue-200 text-sm">Precio: $${order.usd.unitPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 6})}</div>
-                            </div>
-
-                            <div class="bg-gradient-to-br from-purple-900/30 to-purple-800/20 rounded-xl p-4 border border-purple-500/30 shadow-inner-glow">
-                                <div class="flex items-center gap-2 mb-2">
-                                    <span class="text-2xl">🇵🇪</span>
-                                    <span class="text-purple-300 text-sm font-bold uppercase tracking-wider">PEN</span>
-                                </div>
-                                <div class="text-white font-black text-2xl mb-1">S/ ${order.pen.total.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
-                                <div class="text-purple-200 text-sm">Precio: S/ ${order.pen.unitPrice.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 6})}</div>
-                            </div>
-                        </div>
-
-                        <div class="bg-gradient-to-r from-gray-800/50 to-gray-700/50 rounded-xl p-4 text-center border border-gray-600/50">
-                            <div class="text-gray-400 text-sm font-bold uppercase tracking-wider mb-1">Cantidad</div>
-                            <div class="text-white font-mono font-black text-xl">${order.quantity.toLocaleString('en-US', {minimumFractionDigits: 8})}</div>
+                        <div class="text-right">
+                            <div class="text-xs text-slate-400 font-mono bg-dark-800/80 px-2 py-0.5 rounded inline-block">ID: ${order.tradeId}</div>
+                            <div class="text-xs text-slate-400 font-medium mt-1">${time}</div>
                         </div>
                     </div>
-                `;
-        }
 
-        updateLastUpdate() {
-            const now = new Date();
-            document.getElementById('lastUpdate').textContent = now.toLocaleTimeString('es-ES');
+                    <div class="grid grid-cols-2 gap-3 mb-3">
+                        <div class="bg-dark-800/50 rounded-lg p-3 border border-slate-700/30">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-slate-400 text-xs font-medium">USD</span>
+                                <span class="text-xs text-slate-500 bg-dark-900/50 px-1.5 py-0.5 rounded text-[10px]">USDT</span>
+                            </div>
+                            <div class="text-white font-bold text-base mb-0.5">$${order.usd.total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                            <div class="text-slate-400 text-xs">Unit: $${order.usd.unitPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 6})}</div>
+                        </div>
+
+                        <div class="bg-dark-800/50 rounded-lg p-3 border border-slate-700/30">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-slate-400 text-xs font-medium">PEN</span>
+                                <span class="text-xs text-slate-500 bg-dark-900/50 px-1.5 py-0.5 rounded text-[10px]">S/</span>
+                            </div>
+                            <div class="text-white font-bold text-base mb-0.5">S/ ${order.pen.total.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                            <div class="text-slate-400 text-xs">Unit: S/ ${order.pen.unitPrice.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 6})}</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-dark-800/50 rounded-lg p-3 text-center border border-slate-700/30">
+                        <div class="text-slate-400 text-xs font-medium mb-1">Amount</div>
+                        <div class="text-white font-mono font-bold">${order.quantity.toLocaleString('en-US', {minimumFractionDigits: 8})}</div>
+                        <div class="text-slate-500 text-xs mt-0.5">Exchange rate: ${order.dollarPenValue.toFixed(3)} PEN/USD</div>
+                    </div>
+                </div>
+            `;
         }
     }
 
