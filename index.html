@@ -59,95 +59,35 @@
     <style>
         /* Animation Keyframes */
         @keyframes slideDown {
-            from {
-                transform: translateY(-100px) scale(0.8);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0) scale(1);
-                opacity: 1;
-            }
+            from { transform: translateY(-100px) scale(0.8); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
         }
         @keyframes glowPulse {
             0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
             50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.6), 0 0 60px rgba(59, 130, 246, 0.3); }
         }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-        @keyframes bounceGentle {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        @keyframes scaleIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
-        }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        @keyframes bounceGentle { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
         /* Visual Effects */
-        .shimmer-effect {
-            background: linear-gradient(
-                    90deg,
-                    transparent 0%,
-                    rgba(255, 255, 255, 0.15) 50%,
-                    transparent 100%
-            );
-            background-size: 200% 100%;
-            animation: shimmer 2.5s linear infinite;
-        }
+        .shimmer-effect { background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.15) 50%, transparent 100%); background-size: 200% 100%; animation: shimmer 2.5s linear infinite; }
+
         /* Base Styles */
-        body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
-            font-family: 'Inter', sans-serif;
-            color: #e2e8f0;
-            overflow-x: hidden;
-        }
+        body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); background-size: 400% 400%; animation: gradientShift 15s ease infinite; font-family: 'Inter', sans-serif; color: #e2e8f0; overflow-x: hidden; }
 
         /* Component Styles */
-        .order-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .order-card:hover {
-            transform: translateY(-5px) scale(1.01);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-        }
+        .order-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .order-card:hover { transform: translateY(-5px) scale(1.01); box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3); }
 
         /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(15, 23, 42, 0.6);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(59, 130, 246, 0.5);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(59, 130, 246, 0.7);
-        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(59, 130, 246, 0.5); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(59, 130, 246, 0.7); }
     </style>
 </head>
 <body class="min-h-screen p-6 overflow-x-hidden">
@@ -177,13 +117,12 @@
             </div>
 
             <div class="flex items-center gap-6 flex-wrap justify-center">
-
-                <!-- Asset Selector -->
+                <!-- Asset Display -->
                 <div>
-                    <label class="text-slate-400 font-medium text-xs uppercase tracking-wider mb-1.5 block">Seleccionar Activo</label>
-                    <select id="cryptoSelect" class="bg-dark-800 text-white px-4 py-2.5 rounded-lg border border-slate-700 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all duration-300 font-medium text-sm w-full md:w-auto">
-                        <option value="BTCUSDT">₿ Bitcoin (BTC/USDT)</option>
-                    </select>
+                    <label class="text-slate-400 font-medium text-xs uppercase tracking-wider mb-1.5 block">Activo Actual</label>
+                    <div id="currentSymbolDisplay" class="bg-dark-800 text-white px-4 py-2.5 rounded-lg border border-slate-700 font-medium text-sm w-full md:w-auto">
+                        ₿ Bitcoin (BTC/USDT)
+                    </div>
                 </div>
 
                 <!-- Connection Status Indicator -->
@@ -196,7 +135,6 @@
             </div>
         </div>
     </header>
-
 
     <!-- Trading Section -->
     <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
@@ -225,95 +163,28 @@
             </div>
         </div>
 
-        <!-- Buy Orders Box -->
-        <div class="premium-card rounded-2xl overflow-hidden shadow-card">
-            <div class="bg-gradient-to-r from-emerald-600 to-green-600 px-6 py-4 relative overflow-hidden">
-                <div class="shimmer-effect absolute inset-0"></div>
-                <div class="relative z-10">
-                    <div class="flex items-center justify-between">
-                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="12" y1="5" x2="12" y2="19"></line>
-                                <polyline points="19 12 12 19 5 12"></polyline>
-                            </svg>
-                            Buy Orders
-                        </h2>
-                        <span class="bg-white/20 text-white text-xs font-medium py-1 px-2 rounded-full">
-                            Live
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="h-[400px] overflow-y-auto" id="buyContainer">
-                <div class="p-8 text-center text-slate-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-slate-300 animate-float" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 20V10"></path>
-                        <path d="M18 14l-6-6-6 6"></path>
-                        <rect x="4" y="4" width="16" height="6" rx="2"></rect>
-                    </svg>
-                    <p class="text-lg font-medium">Waiting for buy orders...</p>
-                    <div class="mt-4 flex justify-center">
-                        <div class="w-6 h-6 border-3 border-green-400 border-t-transparent rounded-full animate-spin"></div>
-                    </div>
-                </div>
-            </div>
+        <!-- Buy Order Card -->
+        <div class="premium-card rounded-2xl overflow-hidden shadow-card" id="buyContainer">
+            <!-- Contenido generado dinámicamente -->
         </div>
 
-        <!-- Sell Orders Box -->
-        <div class="premium-card rounded-2xl overflow-hidden shadow-card">
-            <div class="bg-gradient-to-r from-rose-600 to-red-600 px-6 py-4 relative overflow-hidden">
-                <div class="shimmer-effect absolute inset-0"></div>
-                <div class="relative z-10">
-                    <div class="flex items-center justify-between">
-                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="12" y1="19" x2="12" y2="5"></line>
-                                <polyline points="5 12 12 5 19 12"></polyline>
-                            </svg>
-                            Sell Orders
-                        </h2>
-                        <span class="bg-white/20 text-white text-xs font-medium py-1 px-2 rounded-full">
-                            Live
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="h-[400px] overflow-y-auto" id="sellContainer">
-                <div class="p-8 text-center text-slate-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-slate-300 animate-float" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 4v10"></path>
-                        <path d="M6 10l6 6 6-6"></path>
-                        <rect x="4" y="14" width="16" height="6" rx="2"></rect>
-                    </svg>
-                    <p class="text-lg font-medium">Waiting for sell orders...</p>
-                    <div class="mt-4 flex justify-center">
-                        <div class="w-6 h-6 border-3 border-red-400 border-t-transparent rounded-full animate-spin"></div>
-                    </div>
-                </div>
-            </div>
+        <!-- Sell Order Card -->
+        <div class="premium-card rounded-2xl overflow-hidden shadow-card" id="sellContainer">
+            <!-- Contenido generado dinámicamente -->
         </div>
     </div>
 </div>
 
 <script>
     // Cryptocurrency symbols mapping
-    const cryptoSymbols = {
-        BTCUSDT: 'BTC',
-        XRPUSDT: 'XRP',
-        ETHUSDT: 'ETH',
-        SOLUSDT: 'SOL'
-    };
+    const cryptoSymbols = { BTCUSDT: 'BTC', XRPUSDT: 'XRP', ETHUSDT: 'ETH', SOLUSDT: 'SOL' };
 
     // Sample price data for chart
     const priceData = {
         labels: Array.from({length: 24}, (_, i) => `${i}:00`),
         datasets: [{
             label: 'Price (USDT)',
-            data: [
-                43250, 43400, 43380, 43500, 43600, 43550, 43700, 43900, 
-                44100, 44050, 43800, 43600, 43500, 43450, 43300, 43200, 
-                43350, 43400, 43500, 43600, 43700, 43650, 43550, 43521
-            ],
+            data: [43250, 43400, 43380, 43500, 43600, 43550, 43700, 43900, 44100, 44050, 43800, 43600, 43500, 43450, 43300, 43200, 43350, 43400, 43500, 43600, 43700, 43650, 43550, 43521],
             borderColor: 'rgba(59, 130, 246, 1)',
             backgroundColor: 'rgba(59, 130, 246, 0.1)',
             borderWidth: 2,
@@ -328,27 +199,24 @@
     class TradingDashboard {
         constructor() {
             this.currentSymbol = 'BTCUSDT';
-            this.sellOrders = [];
-            this.buyOrders = [];
-            this.maxOrders = 20;
             this.websocket = null;
             this.reconnectInterval = null;
             this.chart = null;
-            this.seenTrades = new Set();          // nuevo
             this.init();
+
+            // Initialize symbol display
+            const symbolDisplay = document.getElementById('currentSymbolDisplay');
+            const cryptoSymbol = cryptoSymbols[this.currentSymbol] || this.currentSymbol;
+            symbolDisplay.textContent = `₿ ${cryptoSymbol}/${this.currentSymbol.replace(cryptoSymbol, '')}`;
         }
 
         init() {
             this.initChart();
-            this.bindEvents();
             this.connectWebSocket();
-            this.initThemeToggle();
         }
 
         initChart() {
             const ctx = document.getElementById('priceChart').getContext('2d');
-
-            // Chart.js configuration
             this.chart = new Chart(ctx, {
                 type: 'line',
                 data: priceData,
@@ -356,9 +224,7 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            display: false
-                        },
+                        legend: { display: false },
                         tooltip: {
                             mode: 'index',
                             intersect: false,
@@ -370,73 +236,39 @@
                             padding: 10,
                             displayColors: false,
                             callbacks: {
-                                label: function(context) {
-                                    return `$${context.raw.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
-                                }
+                                label: (context) => `$${context.raw.toLocaleString('en-US', {minimumFractionDigits: 2})}`
                             }
                         }
                     },
                     scales: {
                         x: {
-                            grid: {
-                                display: false,
-                                drawBorder: false
-                            },
-                            ticks: {
-                                color: 'rgba(148, 163, 184, 0.7)',
-                                font: {
-                                    size: 10
-                                },
-                                maxRotation: 0,
-                                maxTicksLimit: 6
-                            }
+                            grid: { display: false, drawBorder: false },
+                            ticks: { color: 'rgba(148, 163, 184, 0.7)', font: { size: 10 }, maxRotation: 0, maxTicksLimit: 6 }
                         },
                         y: {
-                            grid: {
-                                color: 'rgba(148, 163, 184, 0.1)',
-                                drawBorder: false
-                            },
-                            ticks: {
-                                color: 'rgba(148, 163, 184, 0.7)',
-                                font: {
-                                    size: 10
-                                },
-                                callback: function(value) {
-                                    return '$' + value.toLocaleString('en-US');
-                                }
-                            }
+                            grid: { color: 'rgba(148, 163, 184, 0.1)', drawBorder: false },
+                            ticks: { color: 'rgba(148, 163, 184, 0.7)', font: { size: 10 }, callback: value => '$' + value.toLocaleString('en-US') }
                         }
                     }
                 }
             });
         }
 
-        bindEvents() {
-            document.getElementById('cryptoSelect').addEventListener('change', (e) => {
-                this.currentSymbol = e.target.value;
-                this.clearOrders();
-                this.subscribeToSymbol();
+        updateSymbolDisplay(symbol) {
+            if (symbol && symbol !== this.currentSymbol) {
+                this.currentSymbol = symbol;
+                const symbolDisplay = document.getElementById('currentSymbolDisplay');
+                const cryptoSymbol = cryptoSymbols[symbol] || symbol;
+                symbolDisplay.textContent = `₿ ${cryptoSymbol}/${symbol.replace(cryptoSymbol, '')}`;
                 this.updateChartData();
-            });
+            }
         }
 
         updateChartData() {
-            // In a real implementation, this would fetch new data for the selected symbol
-            // For now, we'll just simulate a data update
             const newData = [...this.chart.data.datasets[0].data];
             const variation = Math.random() * 500 - 250;
-
-            this.chart.data.datasets[0].data = newData.map(price => 
-                Math.max(100, price + variation * (Math.random() - 0.5))
-            );
-
+            this.chart.data.datasets[0].data = newData.map(price => Math.max(100, price + variation * (Math.random() - 0.5)));
             this.chart.update();
-        }
-
-        clearOrders() {
-            this.sellOrders = [];
-            this.buyOrders = [];
-            this.renderOrders();
         }
 
         connectWebSocket() {
@@ -446,227 +278,126 @@
                 this.websocket.onopen = () => {
                     this.updateConnectionStatus(true);
                     this.subscribeToSymbol();
-                    if (this.reconnectInterval) {
-                        clearInterval(this.reconnectInterval);
-                        this.reconnectInterval = null;
-                    }
+                    if (this.reconnectInterval) { clearInterval(this.reconnectInterval); this.reconnectInterval = null; }
                 };
 
                 this.websocket.onmessage = (event) => {
                     try {
                         const data = JSON.parse(event.data);
                         if (data.symbol && data.side) {
-                            this.addOrder(data);
-                            this.updateActivityTable(data);
+                            this.updateSymbolDisplay(data.symbol);
+                            this.renderSingleOrder(data.side === 'SELL' ? 'sellContainer' : 'buyContainer', data, data.side.toLowerCase());
                         }
-                    } catch (error) {
-                        console.error('Error parsing message:', error);
-                    }
+                    } catch (error) { console.error('Error parsing message:', error); }
                 };
 
-                this.websocket.onclose = () => {
-                    this.updateConnectionStatus(false);
-                    this.startReconnect();
-                };
-
-                this.websocket.onerror = (error) => {
-                    this.updateConnectionStatus(false);
-                };
-
-            } catch (error) {
-                this.updateConnectionStatus(false);
-                this.startReconnect();
-            }
+                this.websocket.onclose = () => { this.updateConnectionStatus(false); this.startReconnect(); };
+                this.websocket.onerror = () => { this.updateConnectionStatus(false); };
+            } catch (error) { this.updateConnectionStatus(false); this.startReconnect(); }
         }
 
         startReconnect() {
             if (!this.reconnectInterval) {
-                this.reconnectInterval = setInterval(() => {
-                    this.connectWebSocket();
-                }, 5000);
+                this.reconnectInterval = setInterval(() => { this.connectWebSocket(); }, 5000);
             }
         }
 
-        subscribeToSymbol() {
+        subscribeToSymbol(symbol) {
+            const symbolToUse = symbol || this.currentSymbol;
             if (this.websocket && this.websocket.readyState === WebSocket.OPEN) {
-                const symbolParam = this.currentSymbol.toLowerCase() + '@trade';
-                const randomId = Math.floor(Math.random() * 1000000);
-                const message = {
-                    method: "SUBSCRIBE",
-                    params: [symbolParam],
-                    id: randomId
-                };
-
-                this.websocket.send(JSON.stringify(message));
-            } else {
-                console.log('WebSocket is not connected, cannot subscribe');
+                const msg = { method: "SUBSCRIBE", params: [symbolToUse.toLowerCase() + '@trade'], id: Math.floor(Math.random() * 1_000_000) };
+                this.websocket.send(JSON.stringify(msg));
             }
         }
 
         updateConnectionStatus(connected) {
             const statusElement = document.getElementById('systemStatus');
-
             if (connected) {
-                statusElement.innerHTML = `
-                    <span class="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse"></span>
-                    ONLINE
-                `;
+                statusElement.innerHTML = `<span class="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse"></span> ONLINE`;
                 statusElement.className = 'flex items-center gap-2 text-green-400 font-semibold text-sm';
             } else {
-                statusElement.innerHTML = `
-                    <span class="w-2.5 h-2.5 bg-red-400 rounded-full animate-pulse"></span>
-                    OFFLINE
-                `;
+                statusElement.innerHTML = `<span class="w-2.5 h-2.5 bg-red-400 rounded-full animate-pulse"></span> OFFLINE`;
                 statusElement.className = 'flex items-center gap-2 text-red-400 font-semibold text-sm';
             }
         }
 
-        updateActivityTable(order) {
-            // This would update the activity table with real data
-            // For now, we'll just log it
-        }
-
-        addOrder(order) {
-            const uniqueId = `${order.symbol}-${order.tradeId}-${order.tradeTime}`;
-            if (this.seenTrades.has(uniqueId)) return;
-            this.seenTrades.add(uniqueId);
-
-            if (order.side === 'SELL') {
-                this.sellOrders.unshift(order);
-                if (this.sellOrders.length > this.maxOrders) {
-                    const removed = this.sellOrders.pop();
-                    const removedId = `${removed.symbol}-${removed.tradeId}-${removed.tradeTime}`;
-                    this.seenTrades.delete(removedId);
-                }
-            } else if (order.side === 'BUY') {
-                this.buyOrders.unshift(order);
-                if (this.buyOrders.length > this.maxOrders) {
-                    const removed = this.buyOrders.pop();
-                    const removedId = `${removed.symbol}-${removed.tradeId}-${removed.tradeTime}`;a
-                    this.seenTrades.delete(removedId);
-                }
-            }
-            this.renderOrders();
-        }
-
-        renderOrders() {
-            this.renderOrderList('sellContainer', this.sellOrders, 'sell');
-            this.renderOrderList('buyContainer', this.buyOrders, 'buy');
-        }
-
-        renderOrderList(containerId, orders, type) {
+        renderSingleOrder(containerId, order, type) {
             const container = document.getElementById(containerId);
-
-            if (orders.length === 0) {
-                const emptyState = type === 'sell' ?
-                    `<div class="p-8 text-center text-slate-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-slate-300 animate-float" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 4v10"></path>
-                            <path d="M6 10l6 6 6-6"></path>
-                            <rect x="4" y="14" width="16" height="6" rx="2"></rect>
-                        </svg>
-                        <p class="text-lg font-medium">Waiting for sell orders...</p>
-                        <div class="mt-4 flex justify-center">
-                            <div class="w-6 h-6 border-3 border-red-400 border-t-transparent rounded-full animate-spin"></div>
-                        </div>
-                    </div>` :
-                    `<div class="p-8 text-center text-slate-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-slate-300 animate-float" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 20V10"></path>
-                            <path d="M18 14l-6-6-6 6"></path>
-                            <rect x="4" y="4" width="16" height="6" rx="2"></rect>
-                        </svg>
-                        <p class="text-lg font-medium">Waiting for buy orders...</p>
-                        <div class="mt-4 flex justify-center">
-                            <div class="w-6 h-6 border-3 border-green-400 border-t-transparent rounded-full animate-spin"></div>
-                        </div>
-                    </div>`;
-                container.innerHTML = emptyState;
-                return;
-            }
-
-            const html = orders.map((order, index) => this.createOrderHTML(order, type, index)).join('');
-            container.innerHTML = html;
+            container.innerHTML = this.createOrderHTML(order, type);
         }
 
-        createOrderHTML(order, type, index) {
-            let time = '--:--:--';
-            try {
-                const timeStr = order.tradeTime.replace(/^\+\d+-/, '');
-                const date = new Date(timeStr);
-                if (!isNaN(date.getTime())) {
-                    time = date.toLocaleTimeString('es-ES');
-                } else {
-                    time = new Date().toLocaleTimeString('es-ES');
-                }
-            } catch (error) {
-                time = new Date().toLocaleTimeString('es-ES');
-            }
+        createOrderHTML(order, type) {
+            const time = (() => {
+                try {
+                    const date = new Date(order.tradeTime.replace(/^\+\d+-/, ''));
+                    return isNaN(date.getTime()) ? new Date().toLocaleTimeString('es-ES') : date.toLocaleTimeString('es-ES');
+                } catch { return new Date().toLocaleTimeString('es-ES'); }
+            })();
 
             const cryptoSymbol = cryptoSymbols[order.symbol] || order.symbol;
-            const isNew = index === 0;
             const isSell = type === 'sell';
-
             return `
-                <div class="order-card mx-3 mb-3 p-4 premium-card rounded-xl ${isNew ? 'animate-scale-in' : ''}" style="animation-delay: ${index * 100}ms">
-                    <div class="flex items-center justify-between mb-3">
-                        <div class="flex items-center gap-2">
-                            <div class="w-8 h-8 flex items-center justify-center ${isSell ? 'bg-red-500/20' : 'bg-green-500/20'} rounded-lg">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ${isSell ? 'text-red-400' : 'text-green-400'}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                    ${isSell ? 
-                                        '<line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline>' : 
-                                        '<line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline>'}
-                                </svg>
-                            </div>
-                            <div>
-                                <span class="text-lg font-bold text-white">${cryptoSymbol}</span>
-                                <div class="flex items-center gap-1.5 mt-0.5">
-                                    <div class="w-1.5 h-1.5 ${isSell ? 'bg-red-400' : 'bg-green-400'} rounded-full animate-pulse"></div>
-                                    <span class="text-xs ${isSell ? 'text-red-400' : 'text-green-400'} font-medium">
-                                        ${order.side}
-                                    </span>
-                                </div>
-                            </div>
+            <div class="bg-gradient-to-r ${isSell ? 'from-rose-600 to-red-600' : 'from-emerald-600 to-green-600'} px-6 py-4 relative overflow-hidden">
+                <div class="shimmer-effect absolute inset-0"></div>
+                <div class="relative z-10 flex items-center justify-between">
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            ${isSell ? '<line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline>' : '<line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline>'}
+                        </svg>
+                        ${isSell ? 'Sell' : 'Buy'} Order
+                    </h2>
+                    <span class="bg-white/20 text-white text-xs font-medium py-1 px-2 rounded-full">Live</span>
+                </div>
+            </div>
+            <div class="p-4">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 flex items-center justify-center ${isSell ? 'bg-red-500/20' : 'bg-green-500/20'} rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ${isSell ? 'text-red-400' : 'text-green-400'}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                ${isSell ? '<line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline>' : '<line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline>'}
+                            </svg>
                         </div>
-                        <div class="text-right">
-                            <div class="text-xs text-slate-400 font-mono bg-dark-800/80 px-2 py-0.5 rounded inline-block">ID: ${order.tradeId}</div>
-                            <div class="text-xs text-slate-400 font-medium mt-1">${time}</div>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-3 mb-3">
-                        <div class="bg-dark-800/50 rounded-lg p-3 border border-slate-700/30">
-                            <div class="flex items-center justify-between mb-1">
-                                <span class="text-slate-400 text-xs font-medium">USD</span>
-                                <span class="text-xs text-slate-500 bg-dark-900/50 px-1.5 py-0.5 rounded text-[10px]">USDT</span>
+                        <div>
+                            <span class="text-lg font-bold text-white">${cryptoSymbol}</span>
+                            <div class="flex items-center gap-1.5 mt-0.5">
+                                <div class="w-1.5 h-1.5 ${isSell ? 'bg-red-400' : 'bg-green-400'} rounded-full animate-pulse"></div>
+                                <span class="text-xs ${isSell ? 'text-red-400' : 'text-green-400'} font-medium">${order.side}</span>
                             </div>
-                            <div class="text-white font-bold text-base mb-0.5">$${order.usd.total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
-                            <div class="text-slate-400 text-xs">Unit: $${order.usd.unitPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 6})}</div>
-                        </div>
-
-                        <div class="bg-dark-800/50 rounded-lg p-3 border border-slate-700/30">
-                            <div class="flex items-center justify-between mb-1">
-                                <span class="text-slate-400 text-xs font-medium">PEN</span>
-                                <span class="text-xs text-slate-500 bg-dark-900/50 px-1.5 py-0.5 rounded text-[10px]">S/</span>
-                            </div>
-                            <div class="text-white font-bold text-base mb-0.5">S/ ${order.pen.total.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
-                            <div class="text-slate-400 text-xs">Unit: S/ ${order.pen.unitPrice.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 6})}</div>
                         </div>
                     </div>
-
-                    <div class="bg-dark-800/50 rounded-lg p-3 text-center border border-slate-700/30">
-                        <div class="text-slate-400 text-xs font-medium mb-1">Amount</div>
-                        <div class="text-white font-mono font-bold">${order.quantity.toLocaleString('en-US', {minimumFractionDigits: 8})}</div>
-                        <div class="text-slate-500 text-xs mt-0.5">Exchange rate: ${order.dollarPenValue.toFixed(3)} PEN/USD</div>
+                    <div class="text-right">
+                        <div class="text-xs text-slate-400 font-mono bg-dark-800/80 px-2 py-0.5 rounded inline-block">ID: ${order.tradeId}</div>
+                        <div class="text-xs text-slate-400 font-medium mt-1">${time}</div>
                     </div>
                 </div>
-            `;
+                <div class="grid grid-cols-2 gap-3 mb-3">
+                    <div class="bg-dark-800/50 rounded-lg p-3 border border-slate-700/30">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-slate-400 text-xs font-medium">USD</span>
+                            <span class="text-xs text-slate-500 bg-dark-900/50 px-1.5 py-0.5 rounded text-[10px]">USDT</span>
+                        </div>
+                        <div class="text-white font-bold text-base mb-0.5">$${order.usd.total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                        <div class="text-slate-400 text-xs">Unit: $${order.usd.unitPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 6})}</div>
+                    </div>
+                    <div class="bg-dark-800/50 rounded-lg p-3 border border-slate-700/30">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-slate-400 text-xs font-medium">PEN</span>
+                            <span class="text-xs text-slate-500 bg-dark-900/50 px-1.5 py-0.5 rounded text-[10px]">S/</span>
+                        </div>
+                        <div class="text-white font-bold text-base mb-0.5">S/ ${order.pen.total.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                        <div class="text-slate-400 text-xs">Unit: S/ ${order.pen.unitPrice.toLocaleString('es-PE', {minimumFractionDigits: 2, maximumFractionDigits: 6})}</div>
+                    </div>
+                </div>
+                <div class="bg-dark-800/50 rounded-lg p-3 text-center border border-slate-700/30">
+                    <div class="text-slate-400 text-xs font-medium mb-1">Amount</div>
+                    <div class="text-white font-mono font-bold">${order.quantity.toLocaleString('en-US', {minimumFractionDigits: 8})}</div>
+                    <div class="text-slate-500 text-xs mt-0.5">Exchange rate: ${order.dollarPenValue.toFixed(3)} PEN/USD</div>
+                </div>
+            </div>`;
         }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        new TradingDashboard();
-    });
+    document.addEventListener('DOMContentLoaded', () => { new TradingDashboard(); });
 </script>
 </body>
 </html>
