@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -137,32 +136,7 @@
     </header>
 
     <!-- Trading Section -->
-    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
-        <!-- Chart Section -->
-        <div class="premium-card rounded-2xl overflow-hidden shadow-card xl:col-span-1">
-            <div class="bg-gradient-to-r from-indigo-600 to-blue-600 px-6 py-4 relative overflow-hidden">
-                <div class="shimmer-effect absolute inset-0"></div>
-                <div class="relative z-10">
-                    <div class="flex items-center justify-between">
-                        <h2 class="text-xl font-bold text-white flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                            </svg>
-                            Market Overview
-                        </h2>
-                        <div class="flex gap-2">
-                            <button class="bg-white/10 hover:bg-white/20 text-white text-xs font-medium py-1 px-2 rounded transition-all">1H</button>
-                            <button class="bg-white/20 text-white text-xs font-medium py-1 px-2 rounded transition-all">1D</button>
-                            <button class="bg-white/10 hover:bg-white/20 text-white text-xs font-medium py-1 px-2 rounded transition-all">1W</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="p-4 h-[400px] flex items-center justify-center">
-                <canvas id="priceChart" class="w-full h-full"></canvas>
-            </div>
-        </div>
-
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
         <!-- Buy Order Card -->
         <div class="premium-card rounded-2xl overflow-hidden shadow-card" id="buyContainer">
             <!-- Contenido generado dinámicamente -->
@@ -179,29 +153,13 @@
     // Cryptocurrency symbols mapping
     const cryptoSymbols = { BTCUSDT: 'BTC', XRPUSDT: 'XRP', ETHUSDT: 'ETH', SOLUSDT: 'SOL' };
 
-    // Sample price data for chart
-    const priceData = {
-        labels: Array.from({length: 24}, (_, i) => `${i}:00`),
-        datasets: [{
-            label: 'Price (USDT)',
-            data: [43250, 43400, 43380, 43500, 43600, 43550, 43700, 43900, 44100, 44050, 43800, 43600, 43500, 43450, 43300, 43200, 43350, 43400, 43500, 43600, 43700, 43650, 43550, 43521],
-            borderColor: 'rgba(59, 130, 246, 1)',
-            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-            borderWidth: 2,
-            pointRadius: 0,
-            pointHoverRadius: 4,
-            pointHoverBackgroundColor: 'rgba(59, 130, 246, 1)',
-            tension: 0.4,
-            fill: true
-        }]
-    };
+    // Chart removed as requested
 
     class TradingDashboard {
         constructor() {
             this.currentSymbol = 'BTCUSDT';
             this.websocket = null;
             this.reconnectInterval = null;
-            this.chart = null;
             this.init();
 
             // Initialize symbol display
@@ -211,47 +169,7 @@
         }
 
         init() {
-            this.initChart();
             this.connectWebSocket();
-        }
-
-        initChart() {
-            const ctx = document.getElementById('priceChart').getContext('2d');
-            this.chart = new Chart(ctx, {
-                type: 'line',
-                data: priceData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false,
-                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                            titleColor: 'rgba(255, 255, 255, 0.9)',
-                            bodyColor: 'rgba(255, 255, 255, 0.9)',
-                            borderColor: 'rgba(59, 130, 246, 0.5)',
-                            borderWidth: 1,
-                            padding: 10,
-                            displayColors: false,
-                            callbacks: {
-                                label: (context) => `$${context.raw.toLocaleString('en-US', {minimumFractionDigits: 2})}`
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: { display: false, drawBorder: false },
-                            ticks: { color: 'rgba(148, 163, 184, 0.7)', font: { size: 10 }, maxRotation: 0, maxTicksLimit: 6 }
-                        },
-                        y: {
-                            grid: { color: 'rgba(148, 163, 184, 0.1)', drawBorder: false },
-                            ticks: { color: 'rgba(148, 163, 184, 0.7)', font: { size: 10 }, callback: value => '$' + value.toLocaleString('en-US') }
-                        }
-                    }
-                }
-            });
         }
 
         updateSymbolDisplay(symbol) {
@@ -260,15 +178,7 @@
                 const symbolDisplay = document.getElementById('currentSymbolDisplay');
                 const cryptoSymbol = cryptoSymbols[symbol] || symbol;
                 symbolDisplay.textContent = `₿ ${cryptoSymbol}/${symbol.replace(cryptoSymbol, '')}`;
-                this.updateChartData();
             }
-        }
-
-        updateChartData() {
-            const newData = [...this.chart.data.datasets[0].data];
-            const variation = Math.random() * 500 - 250;
-            this.chart.data.datasets[0].data = newData.map(price => Math.max(100, price + variation * (Math.random() - 0.5)));
-            this.chart.update();
         }
 
         connectWebSocket() {
